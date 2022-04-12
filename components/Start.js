@@ -1,6 +1,6 @@
 import React from 'react';
 // For importing the react native components
-import { StyleSheet, View, Text, TextInput, Pressable, ImageBackground, Image, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, Text, TextInput, Pressable, ImageBackground, Image, TouchableOpacity, keyboardAvoiding } from 'react-native';
 // For importing the images and icons
 import BackgroundImage from '../assets/Background-Image.png';
 import icon from '../assets/usericon.png';
@@ -108,12 +108,13 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
     },
-
+    //Box that has all information contained
     titleBox: {
         height: '50%',
         width: '88%',
         alignItems: 'center',
         paddingTop: 100
+
     },
 
     title: {
@@ -121,7 +122,7 @@ const styles = StyleSheet.create({
         fontWeight: "600",
         color: '#FFFFFF',
     },
-
+    //Box beneath welcome text
     box1: {
         backgroundColor: 'white',
         height: '44%',
@@ -130,7 +131,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
 
     },
-
+    //Box where name is inputted
     inputBox: {
         borderWidth: 2,
         borderRadius: 1,
