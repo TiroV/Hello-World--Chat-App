@@ -1,7 +1,18 @@
+//React imports
 import React from 'react';
 import { View, Platform, KeyboardAvoidingView, Text, Button, TextInput, StyleSheet } from 'react-native';
 import { GiftedChat, Bubble } from 'react-native-gifted-chat'
 
+
+
+//Firebase imports
+
+import firebase from 'firebase';
+import firestore from 'firebase';
+
+
+//const firebase = require('firebase');
+//require('firebase/firestore');
 
 export default class Chat extends React.Component {
     //State initialization
@@ -10,8 +21,29 @@ export default class Chat extends React.Component {
         this.state = {
             messages: [],
         };
+
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDX9UHQT8MAjx9cJirjsH6UTXqJPPKXxdU",
+            authDomain: "chatapp-768f9.firebaseapp.com",
+            projectId: "chatapp-768f9",
+            storageBucket: "chatapp-768f9.appspot.com",
+            messagingSenderId: "1059909629900",
+            appId: "1:1059909629900:web:1baec5b9905caa24190f69"
+        };
+
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+        //Refrences chat messages from firebase
+        this.referenceMessages = firebase.firestore().collection("messages");
+
     }
 
+
+
+
+    //Deals with the handling of messages showing up
     componentDidMount() {
         this.setState({
             messages: [
@@ -35,12 +67,31 @@ export default class Chat extends React.Component {
         })
     }
 
+    onCollectionUpdate = (querySnapshot) => {
+        const messages = [];
+        // Goes through each document
+        querySnapshot.forEach((doc) => {
+            // Gets the QueryDocumentSnapshot's data
+            let data = doc.data();
+            messages.push({
+                _id: data._id,
+                text: data.text,
+                createdAt: data.createdAt.toDate(),
+                user: data.user,
+            });
+        });
+        this.setState({
+            messages,
+        });
+    };
+
+
     onSend(messages = []) {
         this.setState(previousState => ({
             messages: GiftedChat.append(previousState.messages, messages),
         }))
     }
-
+    //Rendering the message in a bubble
     renderBubble(props) {
         return (
             <Bubble
