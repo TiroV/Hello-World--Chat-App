@@ -3,42 +3,175 @@ import { View, Platform, KeyboardAvoidingView, Text, Button, TextInput, StyleShe
 import { GiftedChat, Bubble } from 'react-native-gifted-chat'
 
 
+<<<<<<< Updated upstream
+=======
+
+//Firebase imports
+
+const firebase = require('firebase');
+require('firebase/firestore');
+
+>>>>>>> Stashed changes
 export default class Chat extends React.Component {
     //State initialization
     constructor() {
         super();
         this.state = {
             messages: [],
+            uid: 0,
+            loggedInText: "Please wait, you are being logged in...",
+            user: {
+                _id: "",
+                name: "",
+                avatar: "",
+            },
         };
+<<<<<<< Updated upstream
+=======
+
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDX9UHQT8MAjx9cJirjsH6UTXqJPPKXxdU",
+            authDomain: "chatapp-768f9.firebaseapp.com",
+            projectId: "chatapp-768f9",
+            storageBucket: "chatapp-768f9.appspot.com",
+            messagingSenderId: "1059909629900",
+            appId: "1:1059909629900:web:1baec5b9905caa24190f69"
+        };
+
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+        //Refrences chat messages from firebase
+        this.referencemessages = firebase.firestore().collection("messages");
+
+>>>>>>> Stashed changes
     }
 
     componentDidMount() {
-        this.setState({
-            messages: [
-                {
-                    _id: 1,
-                    text: 'Hello, you!',
-                    createdAt: new Date(),
-                    user: {
-                        _id: 2,
-                        name: 'React Native',
-                        avatar: 'https://placeimg.com/140/140/any',
-                    },
+        let { name } = this.props.route.params;
+        this.props.navigation.setOptions({ title: name });
+        //Pulls the information from firestore
+        this.referencemessages = firebase.firestore().collection('messages');
+        this.unsubscribe = this.referencemessages.onSnapshot(this.onCollectionUpdate)
+        //Authenticates user
+        this.authUnsubscribe = firebase.auth().onAuthStateChanged((user) => {
+            if (!user) {
+                firebase.auth().signInAnonymously();
+            }
+            this.setState({
+                uid: user.uid,
+                loggedInText: "Hello there!",
+                messages: [],
+                user: {
+                    _id: user.uid,
+                    name: name,
+                    //Change the url to update the test avatar
+                    avatar: "https://i.imgur.com/Ilg6qlx.jpg",
                 },
-                {
-                    _id: 2,
-                    text: 'This is a system message',
-                    createdAt: new Date(),
-                    system: true,
-                },
-            ]
-        })
+            });
+
+            //Refrence to the active user's information
+            this.refMsgsUser = firebase
+                .firestore()
+                .collection('messages')
+                .where('uid', '==', this.state.uid);
+
+
+            this.unsubscribe = this.referencemessages
+                .orderBy("createdAt", "desc")
+                .onSnapshot(this.onCollectionUpdate);
+
+
+        });
+
     }
 
+    componentWillUnmount() {
+        //Stop listening for authentication
+        this.authUnsubscribe();
+        //Stop listening for changes
+        this.unsubscribe();
+    }
+
+<<<<<<< Updated upstream
+=======
+    onCollectionUpdate = (querySnapshot) => {
+        const messages = [];
+        // Makes a forEach to check the messages list
+        querySnapshot.forEach((doc) => {
+            // Gets the QueryDocumentSnapshot's data
+            let data = doc.data();
+            messages.push({
+                _id: data._id,
+                text: data.text,
+                createdAt: data.createdAt.toDate(),
+                user: {
+                    _id: data.user._id,
+                    name: data.user.name,
+                    avatar: data.user.avatar,
+                },
+
+            });
+        });
+        this.setState({
+            messages,
+
+        });
+        this.saveMessages();
+    };
+
+    //Adds new messages
+    addMessages() {
+        const message = this.state.messages[0];
+        this.referencemessages.add({
+            _id: message._id,
+            text: message.text || "",
+            createdAt: message.createdAt,
+            user: this.state.user,
+            image: message.image || "",
+            location: message.location || null,
+        });
+    }
+    //Get messages
+    async getMessages() {
+        let messages = '';
+        try {
+            messages = await AsyncStorage.getItem('messages') || [];
+            this.setState({
+                messages: JSON.parse(messages)
+            });
+        } catch (error) {
+            console.log(error.message);
+        }
+    };
+
+
+    //Saves messages
+    async saveMessages() {
+        try {
+            await AsyncStorage.setItem(
+                "messages",
+                JSON.stringify(this.state.messages)
+            );
+        } catch (error) {
+            console.log(error.message);
+        }
+    }
+
+
+
+>>>>>>> Stashed changes
     onSend(messages = []) {
-        this.setState(previousState => ({
-            messages: GiftedChat.append(previousState.messages, messages),
-        }))
+        this.setState(
+            (previousState) => ({
+                messages: GiftedChat.append(previousState.messages, messages),
+            }),
+            () => {
+                this.addMessages();
+                this.saveMessages();
+            }
+        );
     }
 
     renderBubble(props) {
@@ -77,7 +210,9 @@ export default class Chat extends React.Component {
                     messages={this.state.messages}
                     onSend={messages => this.onSend(messages)}
                     user={{
-                        _id: 1,
+                        _id: this.state.user._id,
+                        name: this.state.name,
+                        avatar: this.state.user.avatar,
                     }}
                 />
 
