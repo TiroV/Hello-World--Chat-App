@@ -6,10 +6,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import NetInfo from '@react-native-community/netinfo';
 
 
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
 //Firebase imports
 
 import firebase from 'firebase';
@@ -19,20 +15,14 @@ import firestore from 'firebase';
 //const firebase = require('firebase');
 //require('firebase/firestore');
 
-<<<<<<< Updated upstream
-=======
 
 
->>>>>>> Stashed changes
 export default class Chat extends React.Component {
     //State initialization
     constructor() {
         super();
         this.state = {
             messages: [],
-<<<<<<< Updated upstream
-        };
-=======
             uid: 0,
             loggedInText: "Please wait, you are being logged in...",
             user: {
@@ -45,7 +35,6 @@ export default class Chat extends React.Component {
             location: null,
         };
 
->>>>>>> Stashed changes
 
 
         const firebaseConfig = {
@@ -61,38 +50,6 @@ export default class Chat extends React.Component {
         if (!firebase.apps.length) {
             firebase.initializeApp(firebaseConfig);
         }
-<<<<<<< Updated upstream
-        //Refrences chat messages from firebase
-        this.referenceMessages = firebase.firestore().collection("messages");
-
-    }
-
-
-
-
-    //Deals with the handling of messages showing up
-    componentDidMount() {
-        this.setState({
-            messages: [
-                {
-                    _id: 1,
-                    text: 'Hello, you!',
-                    createdAt: new Date(),
-                    user: {
-                        _id: 2,
-                        name: 'React Native',
-                        avatar: 'https://placeimg.com/140/140/any',
-                    },
-                },
-                {
-                    _id: 2,
-                    text: 'This is a system message',
-                    createdAt: new Date(),
-                    system: true,
-                },
-            ]
-        })
-=======
         //References chat messages from firebase
         this.referencemessages = firebase.firestore().collection("messages");
 
@@ -170,7 +127,6 @@ export default class Chat extends React.Component {
             //Stop listening for changes
             this.unsubscribe();
         }
->>>>>>> Stashed changes
     }
 
     onCollectionUpdate = (querySnapshot) => {
@@ -189,11 +145,6 @@ export default class Chat extends React.Component {
         this.setState({
             messages,
         });
-<<<<<<< Updated upstream
-    };
-
-
-=======
     }
     //Gets and updates messages
     async getMessages() {
@@ -235,7 +186,6 @@ export default class Chat extends React.Component {
 
 
     //Updates the messages, then adds the text and saves them
->>>>>>> Stashed changes
     onSend(messages = []) {
         this.setState(previousState => ({
             messages: GiftedChat.append(previousState.messages, messages),
