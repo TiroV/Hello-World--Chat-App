@@ -109,24 +109,17 @@ export default class Chat extends React.Component {
         });
     }
 
-    renderInputToolbar(props) {
-        if (this.state.isConnected == false) {
-        } else {
-            return (
-                <InputToolbar
-                    {...props}
-                />
-            );
-        }
-    }
+
 
     componentWillUnmount() {
-        if (this.state.isConnected) {
-            //Stop listening for authentication
-            this.authUnsubscribe();
-            //Stop listening for changes
-            this.unsubscribe();
-        }
+        NetInfo.fetch().then((connection) => {
+            if (connection.isConnected) {
+                //Stop listening for authentication
+                this.authUnsubscribe();
+                //Stop listening for changes
+                this.unsubscribe();
+            }
+        });
     }
 
     onCollectionUpdate = (querySnapshot) => {
@@ -205,6 +198,16 @@ export default class Chat extends React.Component {
         )
     }
 
+    renderInputToolbar(props) {
+        if (this.state.isConnected == false) {
+        } else {
+            return (
+                <InputToolbar
+                    {...props}
+                />
+            );
+        }
+    }
 
 
     render() {
