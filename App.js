@@ -2,9 +2,11 @@ import React, { Component } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, TextInput, Button, Alert, ScrollView } from 'react-native';
 
+
 //The Screens
 import Chat from './components/Chat';
 import Start from './components/Start';
+import CustomActions from './components/CustomActions';
 
 // import react native gesture handler
 import 'react-native-gesture-handler';
@@ -23,6 +25,10 @@ export default class App extends React.Component {
     super(props);
     this.state = { text: "" };
   }
+
+  renderCustomActions = (props) => {
+    return <CustomActions {...props} />;
+  };
 
   render() {
     return (
