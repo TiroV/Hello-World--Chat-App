@@ -145,6 +145,19 @@ export default class Chat extends React.Component {
         this.setState({
             messages,
         });
+        this.saveMessages();
+    }
+    //Adds new messages
+    addMessages() {
+        const message = this.state.messages[0];
+        this.referencemessages.add({
+            _id: message._id,
+            text: message.text || "",
+            createdAt: message.createdAt,
+            user: this.state.user,
+            image: message.image || "",
+            location: message.location || null,
+        });
     }
     //Gets and updates messages
     async getMessages() {
@@ -187,10 +200,17 @@ export default class Chat extends React.Component {
 
     //Updates the messages, then adds the text and saves them
     onSend(messages = []) {
-        this.setState(previousState => ({
-            messages: GiftedChat.append(previousState.messages, messages),
-        }))
+        this.setState(
+            (previousState) => ({
+                messages: GiftedChat.append(previousState.messages, messages),
+            }),
+            () => {
+                this.addMessages();
+                this.saveMessages();
+            }
+        );
     }
+
     //Rendering the message in a bubble
     renderBubble(props) {
         return (
@@ -271,7 +291,9 @@ export default class Chat extends React.Component {
                     messages={this.state.messages}
                     onSend={messages => this.onSend(messages)}
                     user={{
-                        _id: 1,
+                        _id: this.state.user._id,
+                        name: this.state.name,
+                        avatar: this.state.user.avatar,
                     }}
                 />
                 {/*If running on an android, will fix the keyboard overlap */}
