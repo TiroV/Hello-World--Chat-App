@@ -3,15 +3,6 @@ import { View, Platform, KeyboardAvoidingView, Text, Button, TextInput, StyleShe
 import { GiftedChat, Bubble } from 'react-native-gifted-chat'
 
 
-<<<<<<< Updated upstream
-=======
-
-//Firebase imports
-
-const firebase = require('firebase');
-require('firebase/firestore');
-
->>>>>>> Stashed changes
 export default class Chat extends React.Component {
     //State initialization
     constructor() {
@@ -26,8 +17,6 @@ export default class Chat extends React.Component {
                 avatar: "",
             },
         };
-<<<<<<< Updated upstream
-=======
 
 
         const firebaseConfig = {
@@ -45,7 +34,6 @@ export default class Chat extends React.Component {
         //Refrences chat messages from firebase
         this.referencemessages = firebase.firestore().collection("messages");
 
->>>>>>> Stashed changes
     }
 
     componentDidMount() {
@@ -94,8 +82,6 @@ export default class Chat extends React.Component {
         this.unsubscribe();
     }
 
-<<<<<<< Updated upstream
-=======
     onCollectionUpdate = (querySnapshot) => {
         const messages = [];
         // Makes a forEach to check the messages list
@@ -161,7 +147,6 @@ export default class Chat extends React.Component {
 
 
 
->>>>>>> Stashed changes
     onSend(messages = []) {
         this.setState(
             (previousState) => ({
